@@ -1,0 +1,87 @@
+import styles from './index.less';
+import React, { useState } from 'react';
+import { MenuFoldOutlined, MenuUnfoldOutlined,SmileOutlined } from '@ant-design/icons';
+import type { BasicLayoutProps } from '@ant-design/pro-layout';
+
+import ProLayout, { PageContainer } from '@ant-design/pro-layout';
+
+export default () => {
+  const [pathname, setPathname] = useState('/welcome');
+  const [collapsed, setCollapsed] = useState(false);
+  const [position, setPosition] = useState<'header' | 'menu'>('header');
+
+  const props: BasicLayoutProps = {
+    location: {
+      pathname,
+    },
+    route:{
+      path: '/',
+      routes: [
+        {
+          path: '/welcome',
+          name: '欢迎',
+          component: './Welcome',
+        },
+        {
+          path: '/admin',
+          name: '管理页',
+          access: 'canAdmin',
+          component: './Admin',
+          routes: [
+            {
+              path: '/admin/sub-page1',
+              name: '一级页面',
+              component: './Welcome',
+            },
+            {
+              path: '/admin/sub-page2',
+              name: '二级页面',
+              component: './Welcome',
+            },
+            {
+              path: '/admin/sub-page3',
+              name: '三级页面',
+              component: './Welcome',
+            },
+          ],
+        },
+      ]
+    },
+    navTheme: 'light',
+    title: "数据上报",
+    collapsed,
+    iconfontUrl: '/',
+    fixSiderbar: true,
+    collapsedButtonRender: false,
+    menuItemRender: (item, dom) => (
+      <a
+        onClick={() => {
+          setPathname(item.path || '/welcome');
+        }}
+      >
+        {dom}
+      </a>
+    ),
+  };
+  return (
+    <ProLayout
+      {...props}
+      onCollapse={setCollapsed}
+      headerContentRender={() => {
+        return (
+          <div
+            onClick={() => setCollapsed(!collapsed)}
+            style={{
+              cursor: 'pointer',
+              fontSize: '16px',
+            }}
+          >
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </div>
+        );
+      }}
+    >
+      324
+    </ProLayout>
+  );
+};
